@@ -1,0 +1,35 @@
+# Ignore virtual environments
+venv/
+.env/
+__pycache__/
+*.pyc
+
+# Ignore build output
+build/
+dist/
+*.spec
+
+# Ignore Playwright binaries
+.playwright/
+playwright/.cache/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Ignore VSCode or PyCharm project settings
+.vscode/
+.idea/
+
+# Ignore test results
+*.pytest_cache/
+
+# Ignore installer files
+*.exe
+*.app
+*.dmg
+*.zip

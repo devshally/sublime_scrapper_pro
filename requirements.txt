@@ -1,0 +1,12 @@
+playwright
+PySide6
+requests
+pandas
+openpyxl
+reportlab
+aiohttp
+python-dotenv
+beautifulsoup4
+twocaptcha
+pyinstaller
+cryptography
