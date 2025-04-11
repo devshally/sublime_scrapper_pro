@@ -3,7 +3,7 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*'  # Only run on version tags, like v1.0.0
+      - 'v*'
 
 jobs:
   build-windows:
@@ -28,8 +28,8 @@ jobs:
         run: |
           pyinstaller run.py --noconfirm --windowed --name "SublimeScrapperPro"
 
-      - name: Upload Windows artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: SublimeScrapperPro-Windows
           path: dist/SublimeScrapperPro/SublimeScrapperPro.exe
@@ -56,14 +56,14 @@ jobs:
         run: |
           pyinstaller run.py --noconfirm --windowed --name "SublimeScrapperPro"
 
-      - name: Create DMG
+      - name: Create .dmg
         run: |
           hdiutil create -volname SublimeScrapperPro \
                         -srcfolder dist/SublimeScrapperPro.app \
                         -ov -format UDZO dist/SublimeScrapperPro.dmg
 
-      - name: Upload macOS artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload macOS Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: SublimeScrapperPro-macOS
           path: dist/SublimeScrapperPro.dmg
@@ -73,8 +73,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
           path: ./artifacts
 
