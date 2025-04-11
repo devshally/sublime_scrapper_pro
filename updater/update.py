@@ -1,28 +1,44 @@
 import requests
-import os
 import zipfile
 import io
+import os
+import sys
+import subprocess
 
-REPO_URL = "https://api.github.com/repos/YOUR_USERNAME/YOUR_REPO/releases/latest"
-DOWNLOAD_DIR = os.path.abspath(".")
+GITHUB_REPO = "https://api.github.com/repos/YOUR_USERNAME/sublime_scrapper_pro/releases/latest"
 
-def check_and_update():
+def check_for_update():
     try:
-        response = requests.get(REPO_URL)
-        response.raise_for_status()
+        response = requests.get(GITHUB_REPO)
         data = response.json()
-        zip_url = data["zipball_url"]
-        version_tag = data["tag_name"]
-
-        if not os.path.exists(".version") or open(".version").read().strip() != version_tag:
-            print("Update available. Downloading...")
-            zip_resp = requests.get(zip_url)
-            z = zipfile.ZipFile(io.BytesIO(zip_resp.content))
-            z.extractall(DOWNLOAD_DIR)
-            with open(".version", "w") as f:
-                f.write(version_tag)
-            return True
-        return False
+        latest_version = data["tag_name"]
+        asset = next((a for a in data["assets"] if a["name"].endswith(".zip")), None)
+        if asset:
+            return latest_version, asset["browser_download_url"]
     except Exception as e:
         print(f"Update check failed: {e}")
-        return False
+    return None, None
+
+def apply_update(download_url):
+    try:
+        response = requests.get(download_url)
+        with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
+            zip_ref.extractall("update_tmp")
+
+        # Overwrite files
+        for root, _, files in os.walk("update_tmp"):
+            for f in files:
+                src = os.path.join(root, f)
+                dst = os.path.join(".", os.path.relpath(src, "update_tmp"))
+                os.replace(src, dst)
+
+        # Cleanup
+        os.remove("update_tmp")
+
+        # Relaunch
+        print("✅ Update applied. Restarting...")
+        subprocess.Popen([sys.executable] + sys.argv)
+        sys.exit(0)
+
+    except Exception as e:
+        print(f"Failed to apply update: {e}")
