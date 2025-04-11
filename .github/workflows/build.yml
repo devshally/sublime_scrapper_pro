@@ -30,7 +30,7 @@ jobs:
 
       - name: Build Windows EXE
         run: |
-          pyinstaller run.py --noconfirm --windowed --name "SublimeScrapperPro" --icon=icon.ico
+          pyinstaller run.py --noconfirm --windowed --name "SublimeScrapperPro" 
 
       - name: Upload Windows EXE
         uses: actions/upload-artifact@v4
@@ -61,7 +61,7 @@ jobs:
 
       - name: Build macOS app
         run: |
-          pyinstaller run.py --noconfirm --windowed --name "SublimeScrapperPro" --icon=icon.icns
+          pyinstaller run.py --noconfirm --windowed --name "SublimeScrapperPro"
 
       - name: Create DMG
         run: |
