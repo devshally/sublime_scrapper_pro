@@ -2,6 +2,7 @@ name: Build Windows
 
 on:
   push:
+    branches: [main]
     tags:
       - 'v*'
 
@@ -27,8 +28,8 @@ jobs:
         run: |
           pyinstaller run.py --noconfirm --windowed --name "SublimeScrapperPro"
 
-      - name: Upload Windows EXE
+      - name: Upload Windows App Folder
         uses: actions/upload-artifact@v4
         with:
           name: SublimeScrapperPro-Windows
-          path: dist/SublimeScrapperPro.exe
+          path: dist/SublimeScrapperPro
