@@ -1,15 +1,12 @@
-name: Build and Release
+name: Build Windows
 
 on:
   push:
-    branches:
-      - main
     tags:
       - 'v*'
 
 jobs:
   build-windows:
-    name: Build for Windows
     runs-on: windows-latest
 
     steps:
@@ -35,42 +32,3 @@ jobs:
         with:
           name: SublimeScrapperPro-Windows
           path: dist/SublimeScrapperPro.exe
-
-  build-macos:
-    name: Build for macOS
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          pip3 install -r requirements.txt pyinstaller
-
-      - name: Install create-dmg
-        run: brew install create-dmg
-
-      - name: Build macOS app
-        run: |
-          pyinstaller run.py --noconfirm --windowed --name "SublimeScrapperPro"
-
-      - name: Create DMG
-        run: |
-          create-dmg \
-            --dmg-title="SublimeScrapperPro" \
-            --app-drop-link \
-            "dist/SublimeScrapperPro.app" \
-            dist/SublimeScrapperPro.dmg
-
-      - name: Upload macOS DMG
-        uses: actions/upload-artifact@v4
-        with:
-          name: SublimeScrapperPro-macOS
-          path: dist/SublimeScrapperPro.dmg
